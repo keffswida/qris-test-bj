@@ -917,3 +917,78 @@ docker compose exec -T db sh -c 'exec mysql -u root -p"$MYSQL_ROOT_PASSWORD" "$M
 Aplikasi dapat dijalankan dan di-deploy ke VPS menggunakan Docker Compose dengan dua container utama, yaitu PHP Apache dan MySQL.
 
 Seluruh kebutuhan komunikasi API Bank Jatim, penyimpanan riwayat pengujian, serta konfigurasi credential harus tetap berjalan normal di lingkungan Docker.
+## 16. VPS Domain & Access Configuration
+
+Aplikasi akan di-deploy pada VPS dan diakses melalui domain berikut:
+
+| Component | Configuration |
+|---|---|
+| Deployment Platform | VPS Linux |
+| Domain | `qrisbj.lksbarokah255.my.id` |
+| Application URL | `https://qrisbj.lksbarokah255.my.id` |
+| Protocol | HTTPS |
+| Deployment Method | Docker Compose |
+| Web Server | Apache (Docker Container) |
+| Backend | PHP Native |
+| Database | MySQL 8.0 |
+
+### 16.1. Domain Configuration
+
+Gunakan domain `qrisbj.lksbarokah255.my.id` sebagai alamat utama aplikasi.
+
+Ketentuan:
+
+- Buat DNS A record untuk `qrisbj.lksbarokah255.my.id` yang mengarah ke IPv4 publik VPS.
+- Pastikan DNS sudah mengarah dengan benar sebelum melakukan konfigurasi SSL.
+- Aplikasi harus dapat diakses menggunakan domain tersebut.
+- Jangan mengubah konfigurasi root domain maupun subdomain lain yang sudah berjalan di VPS.
+
+### 16.2. Application Access
+
+URL utama aplikasi:
+
+```text
+https://qrisbj.lksbarokah255.my.id
+```
+
+Ketentuan:
+
+- Aplikasi diakses langsung melalui root domain, tanpa subdirectory atau path tambahan.
+- HTTP harus diarahkan ke HTTPS.
+- Dashboard aplikasi tersedia melalui URL utama.
+- Endpoint internal aplikasi mengikuti routing yang dibuat pada aplikasi.
+- Database MySQL tetap berada di internal Docker network dan tidak dapat diakses langsung dari internet.
+
+### 16.3. Reverse Proxy & Docker Networking
+
+- Aplikasi tetap dijalankan menggunakan Docker Compose.
+- Apache di dalam container menangani HTTP request aplikasi.
+- Port aplikasi harus dapat dikonfigurasi agar dapat dihubungkan dengan reverse proxy VPS.
+- Jika VPS sudah menggunakan Nginx sebagai reverse proxy, arahkan proxy ke port aplikasi yang diekspos oleh Docker.
+- Periksa konfigurasi web server dan reverse proxy yang sudah berjalan sebelum melakukan perubahan.
+- Jangan mengasumsikan konfigurasi reverse proxy yang sedang digunakan.
+- Jangan mengubah atau mengganggu website dan subdomain lain yang sudah berjalan di VPS.
+
+### 16.4. SSL/HTTPS Configuration
+
+- Domain wajib menggunakan SSL certificate yang valid.
+- Seluruh akses aplikasi menggunakan HTTPS.
+- HTTP diarahkan ke HTTPS.
+- Pastikan mekanisme renewal SSL certificate berjalan.
+- Jangan menonaktifkan SSL verification pada komunikasi outbound aplikasi ke API Bank Jatim.
+
+### 16.5. Deployment Acceptance Criteria
+
+- [ ] DNS domain mengarah ke IPv4 publik VPS.
+- [ ] Docker Compose berhasil menjalankan aplikasi.
+- [ ] Reverse proxy dapat meneruskan request ke container aplikasi.
+- [ ] Domain dapat diakses menggunakan HTTPS.
+- [ ] HTTP otomatis diarahkan ke HTTPS.
+- [ ] Dashboard dapat diakses melalui `https://qrisbj.lksbarokah255.my.id`.
+- [ ] MySQL hanya dapat diakses melalui internal Docker network.
+- [ ] Deployment tidak mengganggu website atau subdomain lain di VPS.
+- [ ] Aplikasi dapat melakukan outbound HTTPS request menuju API Bank Jatim.
+
+**Final Deployment Goal**
+
+Aplikasi dapat berjalan di VPS menggunakan Docker Compose dan dapat diakses melalui domain `https://qrisbj.lksbarokah255.my.id` dengan koneksi HTTPS yang valid.

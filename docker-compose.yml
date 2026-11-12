@@ -1,0 +1,54 @@
+# ============================================================
+# Bank Jatim SNAP API Tester — Docker Compose
+# Dua service: app (PHP 8.3 + Apache) dan db (MySQL 8.0).
+# Konfigurasi dibaca dari file .env di root project.
+# ============================================================
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: qrisbj-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      # .env di-mount read-only — credential tidak tersimpan di dalam image.
+      - ./.env:/var/www/html/.env:ro
+      # storage: log aplikasi + private key (di luar direktori public).
+      - ./storage:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - internal
+
+  db:
+    image: mysql:8.0
+    container_name: qrisbj-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-test-qris-bj}
+      MYSQL_USER: ${DB_USERNAME:-qris_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
+    volumes:
+      # Named volume: data tetap tersimpan walau container dibuat ulang.
+      - db_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    # Port MySQL TIDAK diekspos ke publik — hanya lewat internal network.
+    networks:
+      - internal
+
+volumes:
+  db_data:
+
+networks:
+  internal:
+    driver: bridge

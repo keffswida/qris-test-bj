@@ -1,0 +1,9 @@
+# Keamanan dasar Apache untuk shared-hosting / non-Docker.
+# Pada Docker, konfigurasi utama berada di docker/apache/vhost.conf.
+
+Options -Indexes
+
+# Jangan izinkan akses file .env dari browser.
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>

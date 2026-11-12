@@ -1,0 +1,7 @@
+.env
+storage/logs/*.log
+storage/keys/*
+!storage/logs/.gitkeep
+!storage/keys/.gitkeep
+.DS_Store
+backup.sql

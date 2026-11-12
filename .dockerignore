@@ -1,0 +1,11 @@
+# File yang tidak boleh masuk ke Docker image.
+.git
+.gitignore
+.env
+.env.example
+storage/logs
+storage/keys
+backup.sql
+.DS_Store
+docs
+*.md
