@@ -9,3 +9,4 @@ backup.sql
 .DS_Store
 docs
 *.md
+*.pdf

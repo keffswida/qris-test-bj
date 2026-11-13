@@ -2,6 +2,12 @@
 
 Sumber: `Document Specification JatimAPI - SNAP v.1.9.4.pdf` (73 halaman, versi v1.9.4, 01 Juli 2026).
 
+> **Catatan 13 Nov 2026:** PDF asli bersifat rahasia kedinasan dan telah dipindahkan
+> keluar repository (dihapus dari git & working directory) atas alasan keamanan.
+> Dokumen ini (`docs/api-analysis.md`) menjadi referensi teknis utama project.
+> Untuk implementasi lanjutan, pastikan PDF tersedia di luar repo dan dibaca kembali
+> sesuai overview.md §3.
+
 Dokumen ini adalah ringkasan hasil analisis yang menjadi dasar implementasi aplikasi tester.
 Rincian teknis wajib mengacu pada PDF; dokumen ini hanya menyaring informasi yang relevan
 dengan lingkup tester: **connectivity test, signature generation, dan get access token**.
