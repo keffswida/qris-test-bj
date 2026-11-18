@@ -5,3 +5,4 @@ storage/keys/*
 !storage/keys/.gitkeep
 .DS_Store
 backup.sql
+vendor/

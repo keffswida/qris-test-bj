@@ -9,6 +9,9 @@ if (!defined('APP_ROOT')) {
 }
 
 require_once APP_ROOT . '/src/Helpers/autoload.php';
+if (is_file(APP_ROOT . '/vendor/autoload.php')) {
+    require_once APP_ROOT . '/vendor/autoload.php';
+}
 
 Config::load(APP_ROOT . '/.env');
 

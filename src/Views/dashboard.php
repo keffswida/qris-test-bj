@@ -270,6 +270,19 @@ $latestLog = $data['latest_logs'][0] ?? null;
                     <pre class="code-block qr-content" id="qr-content"><?= e($flash['qr_content']) ?></pre>
                     <button type="button" class="btn btn-small" data-copy-target="qr-content">Salin</button>
                 </div>
+                <div class="qr-image-wrap">
+                    <div class="qr-image">
+                        <?php if (!empty($flash['qr_image'])): ?>
+                            <img src="<?= e($flash['qr_image']) ?>" alt="QR MPM" class="qr-image-img" />
+                        <?php endif; ?>
+                    </div>
+                    <div class="qr-actions">
+                        <?php if (!empty($flash['qr_image'])): ?>
+                            <a class="btn btn-small" href="<?= e($flash['qr_image']) ?>" download="qr-mpm.png">Unduh PNG</a>
+                        <?php endif; ?>
+                    </div>
+                    <p class="muted">QR MPM siap dipindai — gunakan aplikasi pembayaran QRIS. Payload tidak diubah.</p>
+                </div>
             <?php endif; ?>
 
             <?php if (!empty($flash['request_payload'])): ?>

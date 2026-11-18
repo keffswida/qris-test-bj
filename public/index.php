@@ -231,6 +231,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case 'qr_generate':
             $result = (new BankJatimService())->generateQrMpm($_POST);
+            if (!empty($result['qr_content'])) {
+                try {
+                    $result['qr_image'] = (new \App\Services\QrImageService())->dataUri((string) $result['qr_content']);
+                } catch (\Throwable $e) {
+                    $result['qr_image'] = null;
+                    $result['error_message'] = $result['error_message'] ?? 'Gagal merender QR: ' . $e->getMessage();
+                }
+            }
             break;
 
         default:

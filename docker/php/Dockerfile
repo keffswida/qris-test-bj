@@ -7,10 +7,13 @@ FROM php:8.3-apache
 # Image resmi PHP 8.3 meng-compile cURL (--with-curl) dan OpenSSL (--with-openssl)
 # secara bawaan; keduanya diverifikasi pada langkah berikutnya.
 # pdo_mysql diinstal di atas mysqlnd yang sudah tersedia.
-RUN docker-php-ext-install pdo_mysql
+RUN apt-get update && apt-get install -y --no-install-recommends libpng-dev libjpeg-dev libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_mysql gd \
+    && rm -rf /var/lib/apt/lists/*
 
 # Verifikasi ekstensi wajib tersedia (build gagal bila ada yang hilang).
-RUN php -m | grep -qE '^(curl|openssl|pdo_mysql)$' || (php -m; exit 1)
+RUN php -m | grep -qE '^(curl|gd|mbstring|openssl|pdo_mysql)$' || (php -m; exit 1)
 
 # --- Apache ---
 RUN a2enmod rewrite headers
